@@ -13,10 +13,10 @@ const APIKEY = "7ea61b540c7c42c0beeec1cea9ccb3d5";
 const maxNbrGifs = 10;
 const ratingFilter = "pg";
 
-// Initial array of Animals
-var animals = ["Dog", "Cat", "Giraff"];
+// Initial array of topics
+var topics = ["Giraffe", "Einstein", "Stock Market"];
 
-
+// Get GIFs based on name passed
 function getGIPHYs(animal) {
     var requestURL = `https://api.giphy.com/v1/gifs/search?q=${animal}&limit=${maxNbrGifs}&rating=${ratingFilter}&api_key=dc6zaTOxFJmzC&limit=10`;
 
@@ -47,8 +47,6 @@ function gifRender(gifs) {
 
         $(".articles").append(cardDiv);
     }
-
-
 }
 
 // Render HTML for a single GIF Card
@@ -84,11 +82,11 @@ function buttonsRender() {
     $("#buttons-view").empty();
 
     // Loops through the array of buttons
-    for (var i in animals) {
+    for (var i in topics) {
         var btn = $("<button>");
         btn.addClass("animal");
-        btn.attr("data-name", animals[i]);
-        btn.text(animals[i]);
+        btn.attr("data-name", topics[i]);
+        btn.text(topics[i]);
         // Added the button to the buttons-view div
         $("#buttons-view").append(btn);
     }
@@ -107,13 +105,13 @@ $(document).ready(function () {
     });
 
     // Wait for button click to display GIFs
-    $("#add-animal").on("click", function (event) {
+    $("#add-topic").on("click", function (event) {
         event.preventDefault();
         // This line of code will grab the input from the textbox
-        var animal = $("#animal-input").val().trim();
+        var animal = $("#topic-input").val().trim();
 
         // The movie from the textbox is then added to our array
-        animals.push(animal);
+        topics.push(animal);
 
         // Calling renderButtons which handles the processing of our movie array
         buttonsRender();
@@ -131,8 +129,6 @@ $(document).ready(function () {
           $(this).attr("src", $(this).attr("data-still"));
           $(this).attr("data-state", "still");
         }
-
     });
 
-
-});
+}); // (document).ready
