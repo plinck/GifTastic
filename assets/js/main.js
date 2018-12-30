@@ -19,31 +19,8 @@ var topics = ["Giraffe", "Einstein", "Stock Market"];
 // Initial array of favorites
 var favs = [];
 
-// Get GIFs based on name passed
-function getGIPHYs(animal) {
-    var requestURL = `https://api.giphy.com/v1/gifs/search?q=${animal}&limit=${maxNbrGifs}&rating=${ratingFilter}&api_key=dc6zaTOxFJmzC&limit=10`;
-
-    console.log(`Request: ${requestURL}`);
-
-    // I had to use the JSONP method since the one used in class caused CORS issues
-    $.ajax({
-        url: requestURL,
-        method: 'GET',
-        dataType: 'JSON',
-        success: function (result) {
-            console.log(result);
-            gifRender(result.data);
-        },
-        error: function (err) {
-            console.log('error:' + err);
-            errorRender(err);
-        }
-    });
-}
-
-// Get GIFs based on Unique GIF ID
-function getByID(gif_id, aCallback) {
-    var requestURL = `https://api.giphy.com/v1/gifs/${gif_id}?api_key=dc6zaTOxFJmzC`;
+// Helper functiion for AJAX calls
+function httpGet(requestURL, aCallback) {
 
     // I had to use the JSONP method since the one used in class caused CORS issues
     $.ajax({
@@ -61,15 +38,39 @@ function getByID(gif_id, aCallback) {
     });
 }
 
+// Get GIFs based on name passed
+function getGIPHYs(animal) {
+    var requestURL = `https://api.giphy.com/v1/gifs/search?q=${animal}&limit=${maxNbrGifs}&rating=${ratingFilter}&api_key=dc6zaTOxFJmzC&limit=10`;
+
+    // Use helper function for AJAX
+    httpGet(requestURL, function (data) {
+        gifsRender(data);
+    });
+}
 
 // Display GIFs retrieved
-function gifRender(gifs) {
+function gifsRender(gifs) {
     $(".articles").empty();
 
     for (var i in gifs) {
         let cardDiv = cardRender(gifs[i]);
 
         $(".articles").append(cardDiv);
+    }
+}
+
+// Render all favorite GIFs
+function favoritesRender() {
+    $(".favorites").empty();
+
+    for (var i in favs) {
+        // format URL for getting single GIF by saved ID
+        var requestURL = `https://api.giphy.com/v1/gifs/${favs[i]}?api_key=dc6zaTOxFJmzC`;
+        // Use helper function for AJAX
+        httpGet(requestURL, function (data) {
+            let cardDiv = cardRender(data);
+            $(".favorites").append(cardDiv);
+        });
     }
 }
 
@@ -96,19 +97,6 @@ function cardRender(gif) {
     return cardDiv;
 }
 
-function favoritesRender() {
-    $(".favorites").empty();
-
-    for (var i in favs) {
-
-        getByID(favs[i], function (gif) {
-            let cardDiv = cardRender(gif);
-            $(".favorites").append(cardDiv);
-        });
-
-    }
-}
-
 // handle errors when retrieving GIFs
 function errorRender(err) {
     console.log(`Error: ${err.statusText}`);
@@ -132,6 +120,29 @@ function buttonsRender() {
     }
 }
 
+// Save Favorites
+function favoritesSave(favorites) {
+    // Check browser support
+    if (typeof (Storage) !== "undefined") {
+        // Store
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+    } else {
+        console.log("Sorry, your browser does not support Web Storage...");
+    }
+}
+
+// Save Favorites
+function favoritesGet() {
+    // Check browser support
+    if (typeof (Storage) !== "undefined") {
+        // Store
+        return JSON.parse(localStorage.getItem("favorites"));
+    } else {
+        console.log("Sorry, your browser does not support Web Storage...");
+    }
+}
+
+
 // Wait for doc to be ready
 $(document).ready(function () {
     buttonsRender();
@@ -148,10 +159,10 @@ $(document).ready(function () {
     $("#add-topic").on("click", function (event) {
         event.preventDefault();
         // This line of code will grab the input from the textbox
-        var animal = $("#topic-input").val().trim();
+        var topic = $("#topic-input").val().trim();
 
         // The movie from the textbox is then added to our array
-        topics.push(animal);
+        topics.push(topic);
 
         // Calling renderButtons which handles the processing of our movie array
         buttonsRender();
@@ -159,7 +170,7 @@ $(document).ready(function () {
     });
 
     // Swap the GIFs from still to animated
-    $(".articles").on("click", ".articleImage", function () {
+    $(document.body).on("click", ".articleImage", function () {
         let state = $(this).attr("data-state");
 
         if (state == "still") {
@@ -176,13 +187,19 @@ $(document).ready(function () {
 
         // Get the gif id of the button from its data attribute
         let gif_id = $(this).attr("data-gifId");
-        console.log(`gif-id: ${gif_id}`);
 
         favs.push(gif_id);
+        favoritesSave(favs);
 
         // rencer the favorites
         favoritesRender();
 
     });
+
+    // START
+    favs = favoritesGet();
+    if (favs.length > 0) {
+        favoritesRender();
+    }
 
 }); // (document).ready

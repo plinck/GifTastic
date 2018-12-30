@@ -2,19 +2,19 @@
 
 ### Overview
 
-This app uses the GIPHY API to make a dynamic web page that populates with gifs of your choice. You create a button with a name of anyuthng you wish - amnimal, person, whatever.  It just gets 10 images from GIPHY and displays them with their rating.  The initial display of the image is static.  When you click an image, it animates.  When you click it again, it goes back to static.  It is mnobile responsive as well.
+This app uses the GIPHY API to make a dynamic web page that populates with gifs of your choice. You create a button with a name of anythng you wish - amnimal, person, whatever.  It just gets 10 images from GIPHY and displays them with their rating.  The initial display of the image is static.  When you click an image, it animates.  When you click it again, it goes back to static.  It is mnobile responsive as well.
 
-### Instructions
+### Specifics
 
 1. When the user clicks on a button, the page grabs 10 static, non-animated gif images from the GIPHY API and place them on the page.
 
-2. When the user clicks one of the still GIPHY images, the gif animates. If the user clicks the gif again, it should stop playing.
+2. When the user clicks one of the still GIPHY images, the gif animates. If the user clicks the gif again, it stops playing.
 
 3. Under every gif, display its rating (PG, G, so on).
 
 4. You can type a name into the user input box, press add, and it will add another buttopn used to fetch GIFs.  You can use that button like any other on the page.
 
-5. Click the fav button to sav the image to a favorites section below the chosen images
+5. Click the fav button to sav the image to a favorites section below the chosen images.  This persists past refreshes bu utilizing local storage.
 
 - - -
 
@@ -30,10 +30,6 @@ This app uses the GIPHY API to make a dynamic web page that populates with gifs 
 4. Include a 1-click download button for each gif, this should work across device types. (see not below)
 
 5. Integrate this search with additional APIs such as OMDB, or Bands in Town. Be creative and build something you are proud to showcase in your portfolio
-
-6. Allow users to add their favorite gifs to a `favorites` section.
-   * This should persist even when they select or add a new topic.
-   * If you are looking for a major challenge, look into making this section persist even when the page is reloaded(via localStorage or cookies).
 
 - - -
 
@@ -52,6 +48,6 @@ I added a portfolio item to both my responsive and bootstrap portfolio.  Both of
 
 ### Notes
 
-* I am not spending a lot of time on bonus for this assignment since I dont find it as compelling as getting moving on firebase and the next sections.  The assignment is just not interesting to me.
+* I am not spending a lot of time on bonus for this assignment since I dont find it as compelling as getting moving on firebase and the next sections.  The assignment is just not that interesting.
 
 - - -
