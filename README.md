@@ -14,9 +14,11 @@ This app uses the GIPHY API to make a dynamic web page that populates with gifs 
 
 4. You can type a name into the user input box, press add, and it will add another buttopn used to fetch GIFs.  You can use that button like any other on the page.
 
+5. Click the fav button to sav the image to a favorites section below the chosen images
+
 - - -
 
-### To Do
+### Possible Enhancements
 
 1. Make it look a little better on mobile - i.e. bigger buttons and fonts
 
@@ -25,7 +27,7 @@ This app uses the GIPHY API to make a dynamic web page that populates with gifs 
 
 3. List additional metadata (title, tags, etc) for each gif in a clean and readable format.
 
-4. Include a 1-click download button for each gif, this should work across device types.
+4. Include a 1-click download button for each gif, this should work across device types. (see not below)
 
 5. Integrate this search with additional APIs such as OMDB, or Bands in Town. Be creative and build something you are proud to showcase in your portfolio
 
@@ -46,10 +48,10 @@ I added a portfolio item to both my responsive and bootstrap portfolio.  Both of
 
 ## Bugs, known issues
 
-* Make it look a little better - Colors and Design
+* The download HTML5 tag does not download working image in safari, and it opens the image in chrome  
 
 ### Notes
 
-* I am using a functional programming approach in this assigment, although I much prefer an object oriented design and programming approach.  
+* I am not spending a lot of time on bonus for this assignment since I dont find it as compelling as getting moving on firebase and the next sections.  The assignment is just not interesting to me.
 
 - - -

@@ -16,6 +16,9 @@ const ratingFilter = "pg";
 // Initial array of topics
 var topics = ["Giraffe", "Einstein", "Stock Market"];
 
+// Initial array of favorites
+var favs = [];
+
 // Get GIFs based on name passed
 function getGIPHYs(animal) {
     var requestURL = `https://api.giphy.com/v1/gifs/search?q=${animal}&limit=${maxNbrGifs}&rating=${ratingFilter}&api_key=dc6zaTOxFJmzC&limit=10`;
@@ -38,6 +41,27 @@ function getGIPHYs(animal) {
     });
 }
 
+// Get GIFs based on Unique GIF ID
+function getByID(gif_id, aCallback) {
+    var requestURL = `https://api.giphy.com/v1/gifs/${gif_id}?api_key=dc6zaTOxFJmzC`;
+
+    // I had to use the JSONP method since the one used in class caused CORS issues
+    $.ajax({
+        url: requestURL,
+        method: 'GET',
+        dataType: 'JSON',
+        success: function (result) {
+            console.log(result);
+            aCallback(result.data);
+        },
+        error: function (err) {
+            console.log('error:' + err);
+            errorRender(err);
+        }
+    });
+}
+
+
 // Display GIFs retrieved
 function gifRender(gifs) {
     $(".articles").empty();
@@ -53,10 +77,13 @@ function gifRender(gifs) {
 function cardRender(gif) {
     let cardDiv = "";
     let caption = "Animal Image";
-    console.log(gif.images.fixed_height.url);
+    let gif_id = gif.id;
 
     cardDiv += `<div class="articleCard card">`;
-    cardDiv += `<div class="cardHeader articleHeadline">Rating: ${gif.rating}</div>`;
+    cardDiv += `<div class="cardHeader articleHeadline">Rating:${gif.rating} `;
+    cardDiv += `<a href="${gif.images.fixed_height_still.url}" download>(still)</a>`;
+    cardDiv += `<button class="saveFavorite" data-gifId="${gif_id}">(fav)</button>`;
+    cardDiv += `</div>`;
     cardDiv += `<div class="cardBody">`;
     cardDiv += `<img class="articleImage" src="${gif.images.fixed_height_still.url}" `;
     cardDiv += `data-still="${gif.images.fixed_height_still.url}" `;
@@ -67,6 +94,19 @@ function cardRender(gif) {
     cardDiv += `</div>`;
 
     return cardDiv;
+}
+
+function favoritesRender() {
+    $(".favorites").empty();
+
+    for (var i in favs) {
+
+        getByID(favs[i], function (gif) {
+            let cardDiv = cardRender(gif);
+            $(".favorites").append(cardDiv);
+        });
+
+    }
 }
 
 // handle errors when retrieving GIFs
@@ -121,14 +161,28 @@ $(document).ready(function () {
     // Swap the GIFs from still to animated
     $(".articles").on("click", ".articleImage", function () {
         let state = $(this).attr("data-state");
-  
+
         if (state == "still") {
-          $(this).attr("src", $(this).attr("data-animate"));
-          $(this).attr("data-state", "animate");
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
         } else if (state == "animate") {
-          $(this).attr("src", $(this).attr("data-still"));
-          $(this).attr("data-state", "still");
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
         }
+    });
+
+    // Save favorite
+    $(document.body).on("click", ".saveFavorite", function () {
+
+        // Get the gif id of the button from its data attribute
+        let gif_id = $(this).attr("data-gifId");
+        console.log(`gif-id: ${gif_id}`);
+
+        favs.push(gif_id);
+
+        // rencer the favorites
+        favoritesRender();
+
     });
 
 }); // (document).ready
