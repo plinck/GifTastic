@@ -198,8 +198,10 @@ $(document).ready(function () {
 
     // START
     favs = favoritesGet();
-    if (favs.length > 0) {
+    if (favs != null) {
         favoritesRender();
+    } else {
+        favs = [];
     }
 
 }); // (document).ready
